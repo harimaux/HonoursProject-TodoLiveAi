@@ -49,34 +49,6 @@ namespace TodoLiveAi.Service
 
 
 
-        public async Task<AppUser?> GetCurrentUser()
-        {
-            var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            if (userId != null)
-            {
-                return await _userManager.FindByIdAsync(userId);
-            }
-
-            return null;
-        }
-
-
-
-        public async Task<List<TaskDB>> GetTasks()
-        {
-            var userId = GetCurrentUser()?.Id;
-
-            if (userId != null && _dbContext.TaskDB != null)
-            {
-                var tasks = await _dbContext.TaskDB
-                    .Where(task => task.OwnerId == userId.ToString())
-                    .ToListAsync();
-                return tasks;
-            }
-            
-            return new List<TaskDB>();
-        }
 
 
 

@@ -13,5 +13,6 @@ namespace TodoLiveAi.Service
         Task CreateTask(TaskDB task);
         Task UpdateTask(TaskDB updatedTask);
         Task DeleteTask(int taskId);
+        //Task <TaskDB> GetAllUserTasks(int userId);
     }
 }
