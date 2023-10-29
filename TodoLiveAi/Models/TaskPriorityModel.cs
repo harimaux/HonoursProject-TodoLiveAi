@@ -2,7 +2,7 @@
 
 namespace TodoLiveAi.Web.Models
 {
-    public class TaskPriority
+    public class TaskPriorityModel
     {
         [Key]
         public int Id { get; set; }

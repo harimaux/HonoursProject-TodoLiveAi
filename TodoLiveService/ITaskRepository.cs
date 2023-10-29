@@ -10,9 +10,10 @@ namespace TodoLiveAi.Service
     public interface ITaskRepository
     {
         Task<TaskDB> GetTaskById(int taskId);
-        Task CreateTask(TaskDB task);
+        Task<TaskDB> CreateTask(TaskDB task);
         Task UpdateTask(TaskDB updatedTask);
-        Task DeleteTask(int taskId);
-        //Task <TaskDB> GetAllUserTasks(int userId);
+        Task DeleteTask(string taskId, string userId);
+        Task<List<TaskDB>> GetAllUserTasks(string userId);
+        Task<List<TaskPriorityDB>> GetPriorities();
     }
 }

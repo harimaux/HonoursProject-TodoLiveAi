@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using TodoLiveAi.Core;
 using TodoLiveAi.Core.DbModels;
+using AutoMapper;
 
 namespace TodoLiveAi.Web.Models
 {
@@ -25,5 +26,15 @@ namespace TodoLiveAi.Web.Models
         [ForeignKey("Owner")]
         public string? OwnerId { get; set; }
         public virtual AppUser? Owner { get; set; }
+
+        internal object Select(Func<object, Action<IMappingOperationOptions<object, TaskModel>>, TaskModel> map)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal List<TaskModel> ToList()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
