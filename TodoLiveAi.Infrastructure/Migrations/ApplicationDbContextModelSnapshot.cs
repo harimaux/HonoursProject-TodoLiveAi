@@ -285,7 +285,7 @@ namespace TodoLiveAi.Infrastructure.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("TaskDB");
+                    b.ToTable("TodoTask");
                 });
 
             modelBuilder.Entity("TodoLiveAi.Core.DbModels.TaskPriorityDB", b =>
@@ -325,50 +325,7 @@ namespace TodoLiveAi.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TaskPriorityDB");
-                });
-
-            modelBuilder.Entity("TodoLiveAi.Core.DbModels.TestingDB", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Author")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email3")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email4")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email5")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TestingDB");
+                    b.ToTable("TaskPriority");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

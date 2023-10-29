@@ -13,9 +13,8 @@ namespace TodoLiveAi.Infrastructure.Data
 {
     public class ApplicationDbContext : IdentityDbContext<AppUser>
     {
-        public DbSet<TaskDB>? TaskDB { get; set; }
-        public DbSet<TaskPriorityDB>? TaskPriorityDB { get; set; }
-        public DbSet<TestingDB> TestingDB { get; set; }
+        public DbSet<TaskDB>? TodoTask { get; set; }
+        public DbSet<TaskPriorityDB>? TaskPriority { get; set; }
 
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
