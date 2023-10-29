@@ -10,6 +10,10 @@ namespace TodoLiveAi.Web.MappedModels
         {
             CreateMap<TaskDB, TaskModel>();
             CreateMap<TaskModel, TaskDB>();
+
+            CreateMap<TaskPriorityDB, TaskPriorityModel>();
+            CreateMap<TaskPriorityModel, TaskPriorityDB>();
+
         }
     }
 }

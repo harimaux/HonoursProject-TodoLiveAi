@@ -31,13 +31,16 @@ namespace TodoLiveAi.Infrastructure.Repositories
         }
 
 
-        public async Task CreateTask(TaskDB task)
+
+        public async Task<TaskDB> CreateTask(TaskDB task)
         {
-            if(task != null && _context.TodoTask != null)
+            if (task != null && _context.TodoTask != null)
             {
                 _context.TodoTask.Add(task);
                 await _context.SaveChangesAsync();
+                return task;
             }
+            throw new Exception("Error while creating a task!");
         }
 
 
@@ -50,12 +53,12 @@ namespace TodoLiveAi.Infrastructure.Repositories
 
 
 
-        public async Task DeleteTask(int taskId)
+        public async Task DeleteTask(string taskId, string userId)
         {
-            if(_context.TodoTask != null)
+            if (_context.TodoTask != null)
             {
-                var task = await _context.TodoTask.FindAsync(taskId);
-                if (task != null)
+                var task = await _context.TodoTask.FindAsync(Int32.Parse(taskId));
+                if (task != null && task.OwnerId == userId)
                 {
                     _context.TodoTask.Remove(task);
                     await _context.SaveChangesAsync();
@@ -66,23 +69,30 @@ namespace TodoLiveAi.Infrastructure.Repositories
 
 
 
-        //public async Task<List<TaskDB>> GetAllUserTasks(int userId)
-        //{
-        //    if (_context.TaskDB != null)
-        //    {
-                
-        //        var tasks = await _context.TaskDB.Where(task => Int32.Parse(task.OwnerId) == userId).ToListAsync();
-        //        if (tasks.Count == 0)
-        //        {
-        //            throw new Exception("Tasks not found"); // Handle this exception as needed
-        //        }
-        //        return tasks;
-        //    }
-        //    throw new Exception("Tasks not found"); // Handle this exception as needed
-        //}
+        public async Task<List<TaskDB>> GetAllUserTasks(string userId)
+        {
+            if (_context.TodoTask != null)
+            {
+                var tasks = await _context.TodoTask.Where(task => task.OwnerId == userId).ToListAsync();
+                if (tasks.Count == 0)
+                {
+                    throw new Exception("You don't have any saved tasks.");
+                }
+                return tasks;
+            }
+            throw new Exception("You don't have any saved tasks.");
+        }
 
 
-
+        public async Task<List<TaskPriorityDB>> GetPriorities()
+        {
+            if (_context.TaskPriority != null)
+            {
+                var priorities = await _context.TaskPriority.ToListAsync();
+                return priorities;
+            }
+            throw new Exception("Priorities error!");
+        }
 
     }
 }

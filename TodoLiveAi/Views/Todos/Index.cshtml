@@ -1,6 +1,7 @@
 ﻿@model TodoLiveAi.Web.Models.MainVM
 
 
+
 <div class="taskMenu">
 
     <div class="userTasksLeftMenu">
@@ -268,6 +269,8 @@
                     processData: false,
                     contentType: false,
                     success: function (data) {
+
+                        console.log(data)
 
                         //RESETS THE FORM AND LABELS + HIDE
                         form.reset();

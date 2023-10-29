@@ -29,19 +29,8 @@ namespace TodoLiveAi.Controllers
         }
 
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var task = await _taskRepository.GetTaskById(7);
-
-            var vm = new MainVM();
-
-            vm.TaskModel = _mapper.Map<TaskModel>(task);
-
-            if (task == null)
-            {
-                return NotFound();
-            }
-
             return View();
         }
 

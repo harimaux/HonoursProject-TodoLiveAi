@@ -3,9 +3,9 @@
     public class MainVM
     {
         public TaskModel? TaskModel { get; set; }
-        public List<TaskModel>? TaskList { get;}
-        public TaskPriority? TaskPriority { get; set; }
-        public List<TaskPriority> TaskPriorityList { get; set; }
+        public List<TaskModel>? TaskList { get; set; }
+        public TaskPriorityModel? TaskPriority { get; set; }
+        public List<TaskPriorityModel> TaskPriorityList { get; set; }
 
         public MainVM()
         { 
@@ -13,9 +13,9 @@
 
             TaskList = new List<TaskModel>();
 
-            TaskPriority = new TaskPriority();
+            TaskPriority = new TaskPriorityModel();
 
-            TaskPriorityList = new List<TaskPriority>();
+            TaskPriorityList = new List<TaskPriorityModel>();
         }
 
     }
