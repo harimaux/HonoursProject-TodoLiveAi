@@ -1,6 +1,8 @@
 ﻿@model TodoLiveAi.Web.Models.MainVM
 
+<div class="aiResponseBox">
 
+</div>
 
 <div class="taskMenu">
 
@@ -270,8 +272,6 @@
                     contentType: false,
                     success: function (data) {
 
-                        console.log(data)
-
                         //RESETS THE FORM AND LABELS + HIDE
                         form.reset();
                         customInput1.forEach(input => {
@@ -434,28 +434,36 @@
             //AI TASK SUPPORT
 
             let getAiHelp = () => {
-
                 let allAiHelpBtns = document.querySelectorAll('.cardFooterLeftBtnsAiHelp');
                 allAiHelpBtns.forEach(btn => {
-
-                    btn.addEventListener('click', (e) => {
-
-                        //console.log(e.target.closest('div > .customCardContent'));
-                        //console.log($(e.target).parents()[3]);
+                    btn.addEventListener('click', async (e) => {
 
                         let cardParent = $(e.target).parents()[3];
                         let cardContent = $(cardParent).find('.customCardContent > p')[0];
-
-                        let cardContentValue = cardContent.innerHTML;
+                        let loadingIcon = $(cardParent).find('.cardFooterLeftLoader')[0];
+                        let message = cardContent.innerHTML;
                         let cardId = e.target.parentElement.getAttribute('cardId');
 
-                        $.post('@Url.Action("GPTsolveTask", "Todos")', { id: cardId, value: cardContentValue }, function (data) {
+                        loadingIcon.style.display = "inline-block";
 
-                        });
+                        try {
 
+                            const data = await $.post('@Url.Action("GetAi", "Todos")', { cardId: cardId, message: message });
+                            $(".aiResponseModalBox").remove();
+                            $(".aiResponseBox").html(data);
+                            $('.aiResponseModalBox').modal("show");
+                            loadingIcon.style.display = "none";
+
+                        } catch (error) {
+
+                            // Handle errors
+                            console.error(error);
+                            loadingIcon.style.display = "none";
+                            alert(error);
+
+                        }
                     });
                 });
-
             };
 
             getAiHelp();
