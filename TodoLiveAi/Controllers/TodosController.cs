@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OpenAI_API;
+using OpenAI_API.Completions;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using TodoLiveAi.Core;
@@ -31,7 +33,6 @@ namespace TodoLiveAi.Web.Controllers
             _taskRepository = taskRepository;
             _mapper = mapper;
         }
-
 
         [Authorize]
         public async Task<IActionResult> Index()
@@ -80,6 +81,7 @@ namespace TodoLiveAi.Web.Controllers
 
         [Authorize]
         [HttpPost]
+        [Route("CreateTask")]
         public async Task<IActionResult> CreateTask(TaskModel formContent)
         {
             if (!ModelState.IsValid)
@@ -154,7 +156,7 @@ namespace TodoLiveAi.Web.Controllers
 
             if (task == null || task.OwnerId != userId)
             {
-                return Content("Error - task does not exist or belongs to someone else.");
+                return Content("Error getting your task");
             }
 
 
@@ -217,6 +219,81 @@ namespace TodoLiveAi.Web.Controllers
 
             return PartialView("_Task", vm);
         }
+
+
+
+
+
+        [HttpPost]
+        [Route("GetAi")]
+        public async Task<IActionResult> GetAi(string cardId, string message)
+        {
+            var task = await _taskRepository.GetTaskById(Int32.Parse(cardId));
+            string? userId = _userManager.GetUserId(User);
+
+            if (task == null || task.OwnerId != userId)
+            {
+                return Content("Error getting your task");
+            }
+
+            var vm = new MainVM();
+
+            vm.TaskModel = _mapper.Map<TaskModel>(task);
+
+            if (vm.TaskModel.Option1 != null)
+            {
+
+                return PartialView("_AiResponse", vm);
+            }
+            else
+            {
+                var secretStoreApiKey = _config["ChatGPT:ApiKey"];
+                string APIkey = string.Empty;
+
+                if (secretStoreApiKey != null)
+                {
+                    APIkey = secretStoreApiKey;
+                }
+
+                string answer = string.Empty;
+                var openai = new OpenAIAPI(APIkey);
+
+                var completion = new CompletionRequest()
+                {
+                    Prompt = message,
+                    //Model = OpenAI_API.Models.Model.DavinciText,
+                    //Model = OpenAI_API.Models.Model.AdaText,
+                    Model = OpenAI_API.Models.Model.DavinciText,
+                    MaxTokens = 100
+                };
+
+                var result = openai.Completions.CreateCompletionsAsync(completion);
+
+                if (result != null)
+                {
+                    foreach (var item in result.Result.Completions)
+                    {
+                        answer = item.Text;
+                    }
+
+                    task.Option1 = answer;
+                    vm.TaskModel.Option1 = answer;
+
+                    await _taskRepository.UpdateTask(task);
+
+                    return PartialView("_AiResponse", vm);
+                }
+                else
+                {
+                    return BadRequest("Not Found");
+                }
+            }
+
+
+
+        }
+
+
 
 
 

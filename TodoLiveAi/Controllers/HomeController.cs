@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
+using OpenAI_API.Completions;
+using OpenAI_API;
 using System.Diagnostics;
 using System.Security.Claims;
 using TodoLiveAi.Core;
@@ -19,14 +21,18 @@ namespace TodoLiveAi.Controllers
         private readonly ILogger<HomeController> _logger;
         private ITaskRepository _taskRepository;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _config;
 
-        public HomeController(ILogger<HomeController> logger, UserManager<AppUser> userManager, ITaskRepository taskRepository, IMapper mapper)
+        public HomeController(ILogger<HomeController> logger, UserManager<AppUser> userManager, ITaskRepository taskRepository, IMapper mapper, IConfiguration config)
         {
             _logger = logger;
             _userManager = userManager;
             _taskRepository = taskRepository;
             _mapper = mapper;
+            _config = config;
         }
+
+
 
 
         public IActionResult Index()

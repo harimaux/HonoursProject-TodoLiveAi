@@ -405,9 +405,9 @@ footer h2 {
     display: flex;
 }
 
-    .customCardHeader2Dates div {
-        margin-right: 1rem;
-    }
+.customCardHeader2Dates div {
+    margin-right: 1rem;
+}
 
 .customCardContent {
     border: solid 1px var(--barelyVisibleLigt);
@@ -507,6 +507,56 @@ footer h2 {
 .cardFooterLeftBtns span {
     font-size: 35px;
 }
+
+.cardFooterLeftLoader {
+    display: none;
+    width: 28px;
+    height: 28px;
+    border: 3px dotted #FFF;
+    border-style: solid solid dotted dotted;
+    border-radius: 50%;
+    position: relative;
+    box-sizing: border-box;
+    animation: rotation 2s linear infinite;
+}
+
+.cardFooterLeftLoader::after {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    border: 3px dotted #FF3D00;
+    border-style: solid solid dotted;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    animation: rotationBack 1s linear infinite;
+    transform-origin: center center;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotationBack {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(-360deg);
+    }
+} 
 
 /*USER TASKS MENU */
 /*::-webkit-scrollbar the scrollbar.
@@ -608,9 +658,9 @@ footer h2 {
     margin: .2rem;
 }
 
-    .priorityBtnsBox span:hover {
-        cursor: pointer;
-    }
+.priorityBtnsBox span:hover {
+    cursor: pointer;
+}
 
 .priorityColseBtnBox {
     position: relative;
@@ -621,86 +671,37 @@ footer h2 {
     right: -88px;
 }
 
-/*.addTodoBtn {
-    position: fixed;
-    left: 2rem;
-    bottom: 2rem;
-    width: 235px;
-    height: 40px;
-    background-color: var(--greenLight);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 1rem;
+/*AI RESPONSE MODAL*/
+
+.aiResponseModalBox {
+    margin-top: 100px;
 }
 
-.taskMenu {
-    display: flex;
-    margin-top: 50px;
+.aiResponseModal {
+    color: var(--darkGray);
+
 }
 
-.userTasksContent {
-    margin-top: 2.5rem;
-}
 
-.userTaskLeftMenuContent {
-    position: fixed;
-    margin: 2rem;
-}
 
-.userTaskLeftMenuContent a {
-    text-decoration: none;
-    color: var(--fontLight);
-}
 
-.userTasksLeftMenu {
-    min-width: 300px;
-    border-right: 1px dashed var(--dottedBorder);
-}
 
-.userTasksLeftMenu ul {
-    padding: 0;
-}
 
-.userTasksLeftMenu li {
-    margin: .5rem;
-    transition: .1s ease-in-out;
-    cursor: pointer;
-    list-style: none;
-}*/
-/*.userTasksLeftMenu li:first-child a  {
-    text-decoration: dashed;
-    text-decoration-line: underline;
-    text-decoration-thickness: 3px;
-}*/
-/*.userTasksLeftMenu li:hover {
-    transform: translateX(5px);
-}
 
-.menuLeftSubMenu1 {
-    height: 0;
-    overflow: hidden;
-}
 
-.showMenuLeftSubMenu1 {
-    height: auto;
-}
 
-.userTasksMain {
-    margin: auto;
-    min-height: 100vh;
-}
 
-.userTaskLeftAiContent {
-    width: 90%;
-    margin: auto;
-    height: 40vh;
-    margin-top: 200px;
-    border-radius: 5px;
-    border: 1px dashed var(--dottedBorder);
-}*/
+
+
+
+
+
+
+
+
+
+
+
 @media screen and (max-width: 1055px) {
     header {
         width: 250px;
