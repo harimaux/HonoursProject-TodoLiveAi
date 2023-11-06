@@ -80,9 +80,6 @@ app.MapControllerRoute(
 
 app.UseSwaggerUI(c =>
 {
-    //c.SwaggerEndpoint("/swagger/v1/Index.html", "gpt");
-    //c.SwaggerEndpoint("/swagger/v1/Index.html", "Todos");
-    //c.SwaggerEndpoint("./v1/swagger.json", "Todos");
     c.SwaggerEndpoint("/swagger/v1/Index.html", "TodoLiveAi");
 });
 
