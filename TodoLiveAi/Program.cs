@@ -29,6 +29,23 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddMvc();
 
+
+
+//Copied from work
+//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+//builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+
+//builder.Services.AddScoped<IHrInterface<Employee>, CRUDRepository<Employee>>();
+//builder.Services.AddScoped<IHrInterface<ContractDetails>, CRUDRepository<ContractDetails>>();
+//builder.Services.AddScoped<IHrInterface<BaseEntity>, CRUDRepository<BaseEntity>>();
+
+//builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+//builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
+
+
+
+
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddEndpointsApiExplorer();

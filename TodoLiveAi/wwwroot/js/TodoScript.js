@@ -5,163 +5,182 @@ $(document).ready(function () {
     $('footer').hide();
 
     //SHOW ADD TASK MODAL
-    $('.addTodoBtn').on('click', function () {
-        $('.addTaskModal').modal("show");
-    });
+    let addTaskModal = document.querySelector('.addTodoBtn');
+    addTaskModal.addEventListener('click', async () => {
 
-    //ANIMATED LABELS IN 'ADD TASK' MODAL > FORM
-    let customInput1 = document.querySelectorAll('.customInputLabelBox1 input, .customInputLabelBox1 textarea, .customInputLabelBox1 select');
+        try {
 
-    //MOVES LABELS IF THERE IS VALUE IN INPUT BOX
+            await $.post(showAddTaskModalUri, {}, function (partialModal) {
 
-    //INITIAL VALUE CHECK
-    customInput1.forEach(input => {
+                $('.userTaskModalBox').html(partialModal);
 
-        if (input.value != '') {
-
-            input.nextElementSibling.classList.add('inputHasValue');
-
-        };
-    });
-
-
-    //CALENDAR WILL ALWAYS HAVE LABEL SET AT TOP (DESIGN IMPLICATIONS)
-    let calendarInput = document.querySelector('.calendarInput');
-    calendarInput.classList.add('inputHasValue');
-
-    //CHECK WHILE TYPIING
-    $(function () {
-        $(customInput1).focus(function () {
-            selectedInput = this;
-
-        }).blur(function (e) {
-
-            if (selectedInput.value != "") {
-                e.target.nextElementSibling.classList.add('inputHasValue');
-            } else {
-                e.target.nextElementSibling.classList.remove('inputHasValue');
-                calendarInput.classList.add('inputHasValue');
-            }
-
-            selectedInput = null;
-
-        });
-    });
+            });
 
 
 
-    //SAVE TASK FORM
-    var form = document.querySelector('.createTaskForm');
-    form.onsubmit = async function (e) {
-
-        e.preventDefault();
-
-        //INPUT VALUES
-        const taskTitle = document.querySelector('input[name=Title]').value;
-        const taskFromRequested = document.querySelector('input[name=FromRequested]').value;
-        const taskDateDue = document.querySelector('input[name=DateDue]').value;
-
-        //TEXTAREA VALUES
-        const taskContent = document.querySelector('textarea[name=Content]').value;
-
-        //SELECT VALUES
-        const taskPriority = document.querySelector('select[name=Priority]').value;
-
-        // LABELS ELEMENTS
-        const labelTitle = document.querySelector('#labelTitle');
-        const labelContent = document.querySelector('#labelContent');
-        const labelFrom = document.querySelector('#labelFrom');
-        const labelPriority = document.querySelector('#labelPriority');
-        const labelDueDate = document.querySelector('#labelDueDate');
-
-        //FROM VALIDATION
-        let isValidated = true;
-
-        function validateForm(inputValue, errorMessage, label) {
-
-            if (inputValue == "" || inputValue == null) {
-
-                isValidated = false;
-
-                label.innerHTML = errorMessage;
-                label.classList.add('inputHasValue');
-                label.style.color = "red";
-
-            } else {
-
-                switch (label.getAttribute('id')) {
-                    case 'labelTitle':
-                        getValueSetStyle()
-                    case 'labelContent':
-                        getValueSetStyle()
-                    case 'labelFrom':
-                        getValueSetStyle()
-                    case 'labelPriority':
-                        getValueSetStyle()
-                    case 'labelDueDate':
-                        getValueSetStyle()
-                }
-
-                function getValueSetStyle() {
-                    label.innerHTML = label.getAttribute('base-value');
-                    label.style.color = "#808080ff";
-                }
-            };
-        };
-
-        //DEFAULT LABEL VALUES
-        validateForm(taskTitle, "Enter title", labelTitle);
-        validateForm(taskContent, "Enter task description", labelContent);
-        validateForm(taskFromRequested, "Enter from", labelFrom);
-        validateForm(taskPriority, "Set priority", labelPriority);
-        validateForm(taskDateDue, "Set due date", labelDueDate);
-
-        if (isValidated == false) {
-            return false;
+        } catch (error) {
+            console.error('An error occurred:', error);
         }
 
+        $('.addTaskModal').modal("show");
 
-        //SET NEW TASK
-        let formModel = new FormData();
 
-        formModel.append('Title', taskTitle);
-        formModel.append('Content', taskContent);
-        formModel.append('FromRequested', taskFromRequested);
-        formModel.append('Priority', taskPriority);
-        formModel.append('DateDue', taskDateDue);
+        //ANIMATED LABELS IN 'ADD TASK' MODAL > FORM
+        let customInput1 = document.querySelectorAll('.customInputLabelBox1 input, .customInputLabelBox1 textarea, .customInputLabelBox1 select');
 
-        $.ajax({
-            url: setNewTaskUri,
-            type: 'POST',
-            data: formModel,
-            processData: false,
-            contentType: false,
-            success: function (data) {
+        //MOVES LABELS IF THERE IS VALUE IN INPUT BOX
 
-                //RESETS THE FORM AND LABELS + HIDE
-                form.reset();
-                customInput1.forEach(input => {
+        //INITIAL VALUE CHECK
+        customInput1.forEach(input => {
 
-                    input.nextElementSibling.classList.remove('inputHasValue');
+            if (input.value != '') {
 
-                });
-                calendarInput.classList.add('inputHasValue');
-                $('.addTaskModal').modal("hide");
+                input.nextElementSibling.classList.add('inputHasValue');
 
-                //SHOWS NEWLY ADDED TASK
-                $('.userTasksCard').prepend(data);
-                let addedCard = document.querySelector('.userTasksCard').firstElementChild;
-                $(addedCard).effect("shake");
-
-                getAiHelp();
-
-            },
-            error: function (xhr, status, error) {
-                var errorMessage = xhr.responseText || 'An error occurred.';
-                alert('Error: ' + errorMessage);
-            }
+            };
         });
-    };
+
+
+        //CALENDAR WILL ALWAYS HAVE LABEL SET AT TOP (DESIGN IMPLICATIONS)
+        let calendarInput = document.querySelector('.calendarInput');
+        calendarInput.classList.add('inputHasValue');
+
+        //CHECK WHILE TYPIING
+        $(function () {
+            $(customInput1).focus(function () {
+                selectedInput = this;
+
+            }).blur(function (e) {
+
+                if (selectedInput.value != "") {
+                    e.target.nextElementSibling.classList.add('inputHasValue');
+                } else {
+                    e.target.nextElementSibling.classList.remove('inputHasValue');
+                    calendarInput.classList.add('inputHasValue');
+                }
+
+                selectedInput = null;
+
+            });
+        });
+
+
+
+        //SAVE TASK FORM
+        var form = document.querySelector('.createTaskForm');
+        form.onsubmit = async function (e) {
+
+            e.preventDefault();
+
+            //INPUT VALUES
+            const taskTitle = document.querySelector('input[name=Title]').value;
+            const taskFromRequested = document.querySelector('input[name=FromRequested]').value;
+            const taskDateDue = document.querySelector('input[name=DateDue]').value;
+
+            //TEXTAREA VALUES
+            const taskContent = document.querySelector('textarea[name=Content]').value;
+
+            //SELECT VALUES
+            const taskPriority = document.querySelector('select[name=Priority]').value;
+
+            // LABELS ELEMENTS
+            const labelTitle = document.querySelector('#labelTitle');
+            const labelContent = document.querySelector('#labelContent');
+            const labelFrom = document.querySelector('#labelFrom');
+            const labelPriority = document.querySelector('#labelPriority');
+            const labelDueDate = document.querySelector('#labelDueDate');
+
+            //FROM VALIDATION
+            let isValidated = true;
+
+            function validateForm(inputValue, errorMessage, label) {
+
+                if (inputValue == "" || inputValue == null) {
+
+                    isValidated = false;
+
+                    label.innerHTML = errorMessage;
+                    label.classList.add('inputHasValue');
+                    label.style.color = "red";
+
+                } else {
+
+                    switch (label.getAttribute('id')) {
+                        case 'labelTitle':
+                            getValueSetStyle()
+                        case 'labelContent':
+                            getValueSetStyle()
+                        case 'labelFrom':
+                            getValueSetStyle()
+                        case 'labelPriority':
+                            getValueSetStyle()
+                        case 'labelDueDate':
+                            getValueSetStyle()
+                    }
+
+                    function getValueSetStyle() {
+                        label.innerHTML = label.getAttribute('base-value');
+                        label.style.color = "#808080ff";
+                    }
+                };
+            };
+
+            //DEFAULT LABEL VALUES
+            validateForm(taskTitle, "Enter title", labelTitle);
+            validateForm(taskContent, "Enter task description", labelContent);
+            validateForm(taskFromRequested, "Enter from", labelFrom);
+            validateForm(taskPriority, "Set priority", labelPriority);
+            validateForm(taskDateDue, "Set due date", labelDueDate);
+
+            if (isValidated == false) {
+                return false;
+            }
+
+
+            //SET NEW TASK
+            let formModel = new FormData();
+
+            formModel.append('Title', taskTitle);
+            formModel.append('Content', taskContent);
+            formModel.append('FromRequested', taskFromRequested);
+            formModel.append('Priority', taskPriority);
+            formModel.append('DateDue', taskDateDue);
+
+            $.ajax({
+                url: setNewTaskUri,
+                type: 'POST',
+                data: formModel,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+
+                    //RESETS THE FORM AND LABELS + HIDE
+                    form.reset();
+                    customInput1.forEach(input => {
+
+                        input.nextElementSibling.classList.remove('inputHasValue');
+
+                    });
+                    calendarInput.classList.add('inputHasValue');
+                    $('.addTaskModal').modal("hide");
+
+                    //SHOWS NEWLY ADDED TASK
+                    $('.userTasksCard').prepend(data);
+                    let addedCard = document.querySelector('.userTasksCard').firstElementChild;
+                    $(addedCard).effect("shake");
+
+
+                },
+                error: function (xhr, status, error) {
+                    var errorMessage = xhr.responseText || 'An error occurred.';
+                    alert('Error: ' + errorMessage);
+                }
+            });
+        };
+
+    });
+
+
 
 
 
@@ -279,7 +298,6 @@ $(document).ready(function () {
 
                 .done(function (data) {
                     $('.userTasksCard').html(data);
-                    getAiHelp();
                 })
 
                 .fail(function (error) {
@@ -304,45 +322,44 @@ $(document).ready(function () {
 
 
     //AI TASK SUPPORT
+    const cardsContainer = document.querySelector('.userTasksCard');
 
-    let getAiHelp = () => {
-        let allAiHelpBtns = document.querySelectorAll('.cardFooterLeftBtnsAiHelp');
-        allAiHelpBtns.forEach(btn => {
-            btn.addEventListener('click', async (e) => {
+    cardsContainer.addEventListener('click', (e) => {
 
-                let cardParent = $(e.target).parents()[3];
-                let cardContent = $(cardParent).find('.customCardContent > p')[0];
-                let loadingIcon = $(cardParent).find('.cardFooterLeftLoader')[0];
-                let message = cardContent.innerHTML;
-                let cardId = e.target.parentElement.getAttribute('cardId');
+        if (e.target.matches('.cardFooterLeftBtnsAiHelp')) {
 
-                loadingIcon.style.display = "inline-block";
+            let cardParent = $(e.target).parents()[3];
+            let cardContent = $(cardParent).find('.customCardContent > p')[0];
+            let loadingIcon = $(cardParent).find('.cardFooterLeftLoader')[0];
+            let message = cardContent.innerHTML;
+            let cardId = e.target.getAttribute('cardId');
 
-                try {
+            loadingIcon.style.display = "inline-block";
 
-                    const data = await $.post(getAiUri, { cardId: cardId, message: message });
+            try {
+
+                $.post(getAiUri, { cardId: cardId, message: message }, function (data) {
+
                     $(".aiResponseModalBox").remove();
                     $(".aiResponseBox").html(data);
                     $('.aiResponseModalBox').modal("show");
                     loadingIcon.style.display = "none";
 
-                } catch (error) {
+                });
 
-                    console.error(error);
-                    loadingIcon.style.display = "none";
-                    alert(error);
+            } catch (error) {
 
-                }
-            });
-        });
-    };
+                console.error(error);
+                loadingIcon.style.display = "none";
+                alert(error);
 
-    getAiHelp();
+            }
 
 
 
+        }
 
-
+    });
 
 
 });
