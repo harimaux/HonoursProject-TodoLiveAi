@@ -348,6 +348,10 @@ footer h2 {
     border-bottom: solid 1px var(--barelyVisibleLigt);
 }
 
+.customCardHeader h5 {
+    width: 400px;
+}
+
 .customCardContent {
     border: solid 1px var(--barelyVisibleLigt);
     width: 97%;
@@ -399,6 +403,10 @@ footer h2 {
     display: flex;
     justify-content: space-between;
     padding: 1rem;
+}
+
+.customCardHeader2 p {
+    max-width: 400px;
 }
 
 .customCardHeader2Dates {
@@ -556,7 +564,16 @@ footer h2 {
     100% {
         transform: rotate(-360deg);
     }
-} 
+}
+
+.cardFooterLeftBtnsAiHelp {
+    pointer-events: visiblePainted;
+}
+
+.cardFooterLeftBtnsAiHelp span,
+.cardFooterLeftBtnsAiHelp p {
+    pointer-events: none;
+}
 
 /*USER TASKS MENU */
 /*::-webkit-scrollbar the scrollbar.

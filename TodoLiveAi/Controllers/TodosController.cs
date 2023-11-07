@@ -74,8 +74,18 @@ namespace TodoLiveAi.Web.Controllers
         }
 
 
+        [HttpPost]
+        public async Task<IActionResult> CreateTaskModal()
+        {
 
+            var priorities = await _taskRepository.GetPriorities();
+            var vm = new MainVM
+            {
+                TaskPriorityList = priorities.Select(_mapper.Map<TaskPriorityModel>).ToList(),
+            };
 
+            return PartialView("_AddTaskModal", vm);
+        }
 
 
 
@@ -195,7 +205,7 @@ namespace TodoLiveAi.Web.Controllers
             switch (id)
             {
                 case "Completed":
-                    vm.TaskList = vm.TaskList.Where(x => x.State == "Completed" && x.DateDue >= DateTime.UtcNow).ToList();
+                    vm.TaskList = vm.TaskList.Where(x => x.State == "Completed").ToList();
                     break;
                 case "Overdue":
                     vm.TaskList = vm.TaskList.Where(x => x.State != "Completed" && x.DateDue < DateTime.UtcNow).ToList();
