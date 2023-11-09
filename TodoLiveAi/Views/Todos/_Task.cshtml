@@ -15,7 +15,7 @@
             }
         }
 
-        <div class="customCard">
+        <div class="customCard" cardId="@task.Id">
 
             <div class="customCardHeader">
                 <div>
@@ -60,7 +60,7 @@
                 <ul class="cardFooterBtns">
 
                     <li>
-                        <span title="Edit" class="material-symbols-outlined cardFooterButtonsHover">
+                        <span title="Edit" class="material-symbols-outlined cardFooterEditeBtn cardFooterButtonsHover">
                             edit
                         </span>
                     </li>
@@ -111,17 +111,3 @@
     }
 }
 
-@section Scripts{
-
-    <script>
-
-        $(document).ready(function () {
-
-
-
-
-        
-        });
-
-    </script>
-}
