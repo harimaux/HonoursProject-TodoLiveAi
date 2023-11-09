@@ -1,4 +1,8 @@
-﻿@*ADD TASK MODAL*@
+﻿@model TodoLiveAi.Web.Models.MainVM
+
+
+
+@*ADD TASK MODAL*@
 <div class="modal fade addTaskModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -10,35 +14,62 @@
                 <div class="addTaskFormContent">
 
                     <div class="customInputLabelBox1">
-                        <input type="text" name="Title" class="customInput1" maxlength="60" />
+                        <input type="text" name="Title" class="customInput1" maxlength="60" value="@Model?.TaskModel?.Title"/>
                         <label for="Title" id="labelTitle" base-value="Title" class="customLabel1">Title</label>
                     </div>
 
                     <div class="customInputLabelBox1">
-                        <textarea name="Content" class="customInput1 customTextbox1" maxlength="2000"></textarea>
+                        <textarea name="Content" class="customInput1 customTextbox1" maxlength="2000">@Model?.TaskModel?.Content</textarea>
                         <label for="Content" id="labelContent" base-value="Description" class="customLabel1">Description</label>
                     </div>
 
                     <hr>
 
                     <div class="customInputLabelBox1">
-                        <input name="FromRequested" class="customInput1" maxlength="60">
+                        <input name="FromRequested" class="customInput1" maxlength="60" value="@Model?.TaskModel?.FromRequested">
                         <label for="FromRequested" id="labelFrom" base-value="From" class="customLabel1">From</label>
                     </div>
 
                     <div class="customInputLabelBox1">
                         <select name="Priority" class="customInput1">
-                            <option></option>
-                            @foreach (var item in Model.TaskPriorityList)
+
+                            @if(Model?.TaskModel?.Priority != null)
                             {
-                                <option value="@item.PriorityName" data-color="@item.PriorityVisual"> @Html.Raw(item.HTMLcode) @item.PriorityName</option>
+                                @foreach (var item in Model.TaskPriorityList)
+                                {
+                                    if(item.PriorityName == Model.TaskModel.Priority)
+                                    {
+                                        <option value="@item.PriorityName" data-color="@item.PriorityVisual" selected> @Html.Raw(item.HTMLcode) @item.PriorityName</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.PriorityName" data-color="@item.PriorityVisual"> @Html.Raw(item.HTMLcode) @item.PriorityName</option>
+                                    }
+
+                                }
                             }
+                            else if (Model?.TaskPriorityList != null)
+                            {
+                                <option></option>
+                                @foreach (var item in Model.TaskPriorityList)
+                                {
+                                    <option value="@item.PriorityName" data-color="@item.PriorityVisual"> @Html.Raw(item.HTMLcode) @item.PriorityName</option>
+                                }
+                            }
+
+
                         </select>
                         <label for="Priority" id="labelPriority" base-value="Priority" class="customLabel1">Priority</label>
                     </div>
 
                     <div class="customInputLabelBox1">
-                        <input type="date" name="DateDue" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="customInput1">
+                        <input type="date" name="DateDue" value="@if(Model?.TaskModel?.DateDue != null){
+                            @Model.TaskModel.DateDue.ToString("yyyy-MM-dd")
+                            }
+                            else
+                            {
+                            @DateTime.Now.ToString("yyyy-MM-dd")
+                            }" class="customInput1">
                         <label for="DateDue" id="labelDueDate" class="customLabel1 calendarInput" base-value="Date Due">Date Due</label>
                     </div>
 
@@ -46,7 +77,16 @@
 
                 <div class="modal-footer d-flex justify-content-between">
                     <img src="~/Images/Logos/logoHarimauxShadow.png" style="width: 40px" />
-                    <button type="submit" class="btn btn-outline-success">Add Task</button>
+                    
+                    @if (Model?.TaskModel?.Title != null)
+                            {
+                        <button type="submit" class="btn btn-outline-success editTaskId" data-value="@Model.TaskModel.Id">Edit Task</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-outline-success">Add Task</button>
+                    }
+                    
                 </div>
 
             </form>

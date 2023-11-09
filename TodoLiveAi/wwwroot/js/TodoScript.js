@@ -1,5 +1,4 @@
 ﻿
-
 $(document).ready(function () {
 
     $('footer').hide();
@@ -8,10 +7,13 @@ $(document).ready(function () {
     let addTaskModal = document.querySelector('.addTodoBtn');
     addTaskModal.addEventListener('click', async () => {
 
+        $('.addTaskModal').modal("hide");
+
         try {
 
             await $.post(showAddTaskModalUri, {}, function (partialModal) {
 
+                $('.userTaskModalBox').html("");
                 $('.userTaskModalBox').html(partialModal);
 
             });
@@ -40,7 +42,6 @@ $(document).ready(function () {
             };
         });
 
-
         //CALENDAR WILL ALWAYS HAVE LABEL SET AT TOP (DESIGN IMPLICATIONS)
         let calendarInput = document.querySelector('.calendarInput');
         calendarInput.classList.add('inputHasValue');
@@ -63,7 +64,6 @@ $(document).ready(function () {
 
             });
         });
-
 
 
         //SAVE TASK FORM
@@ -185,26 +185,41 @@ $(document).ready(function () {
 
 
 
-    //DELETE, EDIT, COMPLETE TASK
+    //DELETE AND COMPLETE TASK METHODS
     const cardBtns = document.querySelector('.userTasksCard');
+
+    let resetFooterBtnsStyle = () => {
+
+        //Hides all confirm boxes
+        let cardFooterConfirmBox = document.querySelectorAll('.cardFooterConfirmBox');
+        cardFooterConfirmBox.forEach(item => {
+
+            item.classList.remove('cardFooterConfirmBoxShow');
+        });
+
+        //removes stle from all Li elements - background color
+        let cardFooterBtsWithConfirm = document.querySelectorAll('.cardFooterBtsWithConfirm');
+        cardFooterBtsWithConfirm.forEach(item => {
+
+            item.style.backgroundColor = "unset";
+        });
+
+        //removes style of all buttons + add back hover
+        let cardFooterShowConfirmBoxBtn = document.querySelectorAll('.cardFooterShowConfirmBoxBtn');
+        cardFooterShowConfirmBoxBtn.forEach(item => {
+
+            item.classList.add('cardFooterButtonsHover');
+            item.style.color = "#F2F2F2";
+            item.style.opacity = "1";
+        });
+
+    };
 
     cardBtns.addEventListener('click', function (e) {
 
         if (e.target.matches('.cardFooterShowConfirmBoxBtn')) {
 
-            //Hides all confirm boxes
-            let cardFooterConfirmBox = document.querySelectorAll('.cardFooterConfirmBox');
-            cardFooterConfirmBox.forEach(item => {
-
-                item.classList.remove('cardFooterConfirmBoxShow');
-            });
-
-            //removes stle from all Li elements - background color
-            let cardFooterBtsWithConfirm = document.querySelectorAll('.cardFooterBtsWithConfirm');
-            cardFooterBtsWithConfirm.forEach(item => {
-
-                item.style.backgroundColor = "unset";
-            });
+            resetFooterBtnsStyle();
 
             //Shows confirm box
             let confirmBox = e.target.previousElementSibling;
@@ -212,14 +227,6 @@ $(document).ready(function () {
 
             let cardFooterLiElement = e.target;
             cardFooterLiElement.parentNode.style.backgroundColor = "#B1B0B1";
-
-            //removes style of all buttons + add back hover
-            let cardFooterShowConfirmBoxBtn = document.querySelectorAll('.cardFooterShowConfirmBoxBtn');
-            cardFooterShowConfirmBoxBtn.forEach(item => {
-
-                item.classList.add('cardFooterButtonsHover');
-                item.style.color = "#F2F2F2";
-            });
 
             //changes style of called button
             e.target.style.color = "#050505";
@@ -230,7 +237,7 @@ $(document).ready(function () {
             let allCloseBtns = document.querySelectorAll('.cardFooterCancelConfirmBox');
             allCloseBtns.forEach(item => {
 
-                item.addEventListener('click', (ev) => {
+                item.addEventListener('click', () => {
 
                     item.parentElement.parentElement.nextElementSibling.classList.add('cardFooterButtonsHover')
                     item.parentElement.parentElement.classList.remove('cardFooterConfirmBoxShow');
@@ -258,7 +265,7 @@ $(document).ready(function () {
             });
 
 
-            // Mark task as complete
+            // MARK TASK AS COMPLETE
             let completeTaskBtn = cardBox.getElementsByClassName('cardFooterMarkTaskAsCompleteBtn')[0];
 
             completeTaskBtn.addEventListener('click', async () => {
@@ -273,9 +280,87 @@ $(document).ready(function () {
             });
 
 
+        };
+
+
+        //EDIT TASK
+        if (e.target.matches('.cardFooterEditeBtn')) {
+
+            resetFooterBtnsStyle();
+
+            let cardParent = $(e.target).parents()[3];
+            let cardId = cardParent.getAttribute('cardId');
+            $('.addTaskModal').modal("hide");
+            $('.userTaskModalBox').html("");
+
+            try {
+
+                $.post(editTaskModalUri, { cardId: cardId }, function (partialModal) {
+
+                    $('.userTaskModalBox').html(partialModal);
+                    $('.addTaskModal').modal("show");
+                    //ANIMATED LABELS IN 'ADD TASK' MODAL > FORM
+                    let customInput1 = document.querySelectorAll('.customInputLabelBox1 input, .customInputLabelBox1 textarea, .customInputLabelBox1 select');
+
+                    //MOVES LABELS IF THERE IS VALUE IN INPUT BOX
+                    customInput1.forEach(input => {
+
+                        if (input.value != '') {
+
+                            input.nextElementSibling.classList.add('inputHasValue');
+
+                        };
+                    });
+
+                    //EDIT TASK FORM
+                    var form = document.querySelector('.createTaskForm');
+                    form.onsubmit = async function (e) {
+
+                        e.preventDefault();
+
+                        let formModel = new FormData(this);
+
+                        formModel.append('Id', $('.editTaskId').attr('data-value'));
+
+                        $.ajax({
+                            type: 'POST',
+                            url: editTaskUri,
+                            data: formModel,
+                            processData: false, // Don't process the data
+                            contentType: false, // Don't set content type
+                            success: function (data) {
+
+                                console.log(data)
+
+                            }
+                        });
+
+
+                    };
+
+
+
+                });
+
+            } catch (error) {
+
+                console.error(error);
+                loadingIcon.style.display = "none";
+                alert(error);
+
+            }
+
 
         };
+
+
+
+
+
+
     });
+
+
 
 
 
@@ -296,13 +381,13 @@ $(document).ready(function () {
 
             $.post(showSelectedTasksUri, { id: selectedTasksName })
 
-                .done(function (data) {
-                    $('.userTasksCard').html(data);
-                })
+            .done(function (data) {
+                $('.userTasksCard').html(data);
+            })
 
-                .fail(function (error) {
-                    console.error('An error occurred:', error);
-                });
+            .fail(function (error) {
+                console.error('An error occurred:', error);
+            });
 
         };
 

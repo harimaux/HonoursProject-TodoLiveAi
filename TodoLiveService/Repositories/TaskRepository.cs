@@ -44,13 +44,21 @@ namespace TodoLiveAi.Infrastructure.Repositories
         }
 
 
-
         public async Task UpdateTask(TaskDB updatedTask)
         {
-            _context.Entry(updatedTask).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
+            var itemId = updatedTask.Id;
+            var task = await GetTaskById(itemId);
 
+            if (task != null)
+            {
+                _context.Entry(task).CurrentValues.SetValues(updatedTask);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception("Error while editing task: Task not found!");
+            }
+        }
 
 
         public async Task DeleteTask(string taskId, string userId)

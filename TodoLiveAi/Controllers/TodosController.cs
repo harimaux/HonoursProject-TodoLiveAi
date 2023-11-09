@@ -148,7 +148,79 @@ namespace TodoLiveAi.Web.Controllers
         }
 
 
+        [HttpPost]
+        public async Task<IActionResult> EditTaskModal(string cardId)
+        {
+            string? userId = _userManager.GetUserId(User);
 
+            if (userId == null)
+            {
+                return Content("Error, user id does not exist!");
+            }
+
+            var task = await _taskRepository.GetTaskById(Int32.Parse(cardId));
+            var newTask = _mapper.Map<TaskModel>(task);
+
+            if (task == null || task.OwnerId != userId)
+            {
+                return Content("Error getting your task");
+            }
+
+            var priorities = await _taskRepository.GetPriorities();
+
+            var vm = new MainVM
+            {
+                TaskModel = newTask,
+                TaskPriorityList = priorities.Select(_mapper.Map<TaskPriorityModel>).ToList(),
+            };
+
+            return PartialView("_AddTaskModal", vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditTask(TaskModel formContent)
+        {
+            string? userId = _userManager.GetUserId(User);
+
+            if (userId == null)
+            {
+                return Content("Error, user id does not exist!");
+            }
+
+            int taskId = formContent.Id;
+
+            var task = await _taskRepository.GetTaskById(taskId);
+
+            if (task == null || task.OwnerId != userId)
+            {
+                return Content("Error getting your task");
+            }
+
+            var editTask = _mapper.Map<TaskModel>(task);
+
+            editTask.Content = formContent.Content;
+            editTask.Title = formContent.Title;
+            editTask.Priority = formContent.Priority;
+            editTask.DateDue = formContent.DateDue;
+            editTask.FromRequested = formContent.FromRequested;
+            editTask.DateEdited = DateTime.Now;
+
+            var setTask = _mapper.Map<TaskDB>(editTask);
+
+            await _taskRepository.UpdateTask(setTask);
+
+            var priorities = await _taskRepository.GetPriorities();
+
+            var vm = new MainVM
+            {
+                TaskModel = editTask,
+                TaskPriorityList = priorities.Select(_mapper.Map<TaskPriorityModel>).ToList(),
+            };
+
+
+
+            return Json("ok");
+        }
 
 
         [Authorize]
