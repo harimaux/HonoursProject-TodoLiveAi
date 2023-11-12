@@ -326,11 +326,18 @@ $(document).ready(function () {
                             type: 'POST',
                             url: editTaskUri,
                             data: formModel,
-                            processData: false, // Don't process the data
-                            contentType: false, // Don't set content type
+                            processData: false,
+                            contentType: false,
                             success: function (data) {
 
-                                console.log(data)
+                                if (data = "ok") {
+
+                                    alert("Task was edited successfuly!");
+
+                                    window.location.reload();
+                                }
+
+
 
                             }
                         });
