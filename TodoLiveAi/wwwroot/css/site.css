@@ -30,6 +30,11 @@ dl, ol, ul {
     margin-bottom: 0rem;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+    transition: background-color 0s 600000s, color 0s 600000s;
+}
+
 body {
     font-family: 'Poppins', sans-serif;
     /*background-color: var(--menuDarker);*/
@@ -51,6 +56,22 @@ body a {
 }
 
 ::-webkit-scrollbar {
+}
+
+/*IDENTITY FRAMEWORK SCREENS*/
+
+.customIdentityStyleBox {
+    margin: 5rem;
+    margin-bottom: 400px;
+}
+
+.customIdentityAccountSettingsBox {
+    margin: 5rem;
+    padding-bottom: 400px;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    background-color: var(--cardBorder);
 }
 /* NAVIGATION */
 header {
