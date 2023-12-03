@@ -147,18 +147,41 @@ footer h2 {
     margin: 1rem;
 }
 
-.footerTechLogos {
+.footerTechLogosBox {
     background-color: var(--ligghtGray);
-    padding: 1rem;
     border-radius: 5px;
+    padding: 1rem;
+    overflow: hidden;
+    max-width: 400px;
+    margin: auto;
+}
+
+.footerTechLogos {
+    animation: footerTechLogosAnimate 20s linear infinite;
+    display: flex;
+}
+
+.footerTechLogos img {
+    margin: .1rem;
+}
+
+@keyframes footerTechLogosAnimate {
+
+    0% {
+        transform: translateX(0px);
+    }
+
+    100% {
+        transform: translateX(-600px);
+    }
 }
 
 .footerTechLogos img {
     width: 50px;
 }
 
-/*HOME*/
 
+/*HOME*/
 .homeBackgroundBox {
     width: 100%;
     height: 100vh;

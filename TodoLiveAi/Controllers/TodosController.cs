@@ -258,48 +258,56 @@ namespace TodoLiveAi.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> ShowSelectedTasks(string id)
         {
-            string? userId = _userManager.GetUserId(User);
-
-            if (userId == null)
+            try
             {
-                return Content("Error, user not set!");
+                string? userId = _userManager.GetUserId(User);
+
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Content("Error, user not set!");
+                }
+
+                var allTasks = await _taskRepository.GetAllUserTasks(userId);
+                var priorities = await _taskRepository.GetPriorities();
+
+                var vm = new MainVM
+                {
+                    TaskList = allTasks.Select(_mapper.Map<TaskModel>).ToList(),
+                    TaskPriorityList = priorities.Select(_mapper.Map<TaskPriorityModel>).ToList(),
+                };
+
+                switch (id)
+                {
+                    case "Completed":
+                        vm.TaskList = vm.TaskList.Where(x => x.State == "Completed").ToList();
+                        break;
+                    case "Overdue":
+                        vm.TaskList = vm.TaskList.Where(x => x.State != "Completed" && x.DateDue < DateTime.UtcNow).ToList();
+                        break;
+                    case "Urgent":
+                        vm.TaskList = vm.TaskList.Where(x => x.Priority == "Urgent" && x.State != "Completed").ToList();
+                        break;
+                    case "Important":
+                        vm.TaskList = vm.TaskList.Where(x => x.Priority == "Important" && x.State != "Completed").ToList();
+                        break;
+                    case "Medium":
+                        vm.TaskList = vm.TaskList.Where(x => x.Priority == "Medium" && x.State != "Completed").ToList();
+                        break;
+                    case "Low":
+                        vm.TaskList = vm.TaskList.Where(x => x.Priority == "Low" && x.State != "Completed").ToList();
+                        break;
+                    default:
+                        // Handle unknown id
+                        break;
+                }
+
+                return PartialView("_Task", vm);
             }
-
-            var allTasks = await _taskRepository.GetAllUserTasks(userId);
-            var priorities = await _taskRepository.GetPriorities();
-
-            var vm = new MainVM
+            catch (Exception ex)
             {
-                TaskList = allTasks.Select(_mapper.Map<TaskModel>).ToList(),
-                TaskPriorityList = priorities.Select(_mapper.Map<TaskPriorityModel>).ToList(),
-            };
 
-            switch (id)
-            {
-                case "Completed":
-                    vm.TaskList = vm.TaskList.Where(x => x.State == "Completed").ToList();
-                    break;
-                case "Overdue":
-                    vm.TaskList = vm.TaskList.Where(x => x.State != "Completed" && x.DateDue < DateTime.UtcNow).ToList();
-                    break;
-                case "Urgent":
-                    vm.TaskList = vm.TaskList.Where(x => x.Priority == "Urgent" && x.State != "Completed").ToList();
-                    break;
-                case "Important":
-                    vm.TaskList = vm.TaskList.Where(x => x.Priority == "Important" && x.State != "Completed").ToList();
-                    break;
-                case "Medium":
-                    vm.TaskList = vm.TaskList.Where(x => x.Priority == "Medium" && x.State != "Completed").ToList();
-                    break;
-                case "Low":
-                    vm.TaskList = vm.TaskList.Where(x => x.Priority == "Low" && x.State != "Completed").ToList();
-                    break;
-                default:
-                    // Handle unknown id
-                    break;
+                return Content(ex.Message);
             }
-
-            return PartialView("_Task", vm);
         }
 
 
@@ -346,7 +354,7 @@ namespace TodoLiveAi.Web.Controllers
                     //Model = OpenAI_API.Models.Model.DavinciText,
                     //Model = OpenAI_API.Models.Model.AdaText,
                     Model = OpenAI_API.Models.Model.DavinciText,
-                    MaxTokens = 100
+                    MaxTokens = 200
                 };
 
                 var result = openai.Completions.CreateCompletionsAsync(completion);

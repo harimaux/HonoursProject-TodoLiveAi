@@ -20,7 +20,7 @@
         <div class="userTaskLeftMenuContent">
 
             <ul>
-                <li><a asp-area="" asp-controller="Todos" asp-action="Index">Active Tasks</a></li>
+                <li><a asp-area="" asp-controller="Todos" asp-action="Index" class="activeTasksLink">Active Tasks</a></li>
                 <li class="menuLeftShowPriority">Priority
 
                     <span class="priorityBtnsBox">
@@ -71,7 +71,8 @@
 
 <div class="userTaskModalBox"></div>
 
-@section Scripts{
+@section Scripts
+{
 
     <script>
 
@@ -83,7 +84,6 @@
         const showAddTaskModalUri = '@Url.Action("CreateTaskModal", "Todos")';
         const editTaskModalUri = '@Url.Action("EditTaskModal", "Todos")';
         const editTaskUri = '@Url.Action("EditTask", "Todos")';
-
 
     </script>
 
