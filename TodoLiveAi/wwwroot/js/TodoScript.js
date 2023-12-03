@@ -1,5 +1,5 @@
 ﻿
-$(document).ready(function () {
+$(function () {
 
     $('footer').hide();
 
@@ -48,10 +48,11 @@ $(document).ready(function () {
 
         //CHECK WHILE TYPIING
         $(function () {
-            $(customInput1).focus(function () {
+            $(customInput1).on("focus", function () {
+
                 selectedInput = this;
 
-            }).blur(function (e) {
+            }).on("blur", function (e) {
 
                 if (selectedInput.value != "") {
                     e.target.nextElementSibling.classList.add('inputHasValue');
@@ -367,25 +368,41 @@ $(document).ready(function () {
 
     });
 
-
-
-
-
-    //ADD UNDERLINE TO A LINK
-
-
-
-
-
-
+    //ADDS INITIAL STYLE TO ACTIVE TASKS LINK
+    const activeTasksLink = document.querySelector('.activeTasksLink');
+    activeTasksLink.style.textDecoration = "underline";
+    activeTasksLink.style.fontWeight = "bold";
 
     const userTasksLeftMenu = document.querySelector('.userTasksLeftMenu');
     userTasksLeftMenu.addEventListener('click', function (e) {
 
         // TASK SORTING - LEFT MENU
         if (e.target.matches('.menuLeftShowCompleted, .menuLeftShowLow, .menuLeftShowOverdue, .menuLeftShowUrgent, .menuLeftShowImportant, .menuLeftShowMedium, .menuLeftShowLow')) {
-            let selectedTasksName = e.target.innerText;
 
+            //ADD STYLE TO CLICKED LINK
+            activeTasksLink.style.textDecoration = "none";
+            activeTasksLink.style.fontWeight = "unset";
+
+            const allLiTagsInMenu = document.querySelectorAll('.userTaskLeftMenuContent ul li');
+            allLiTagsInMenu.forEach(item => {
+
+                item.style.textDecoration = "none";
+                item.style.fontWeight = "unset";
+            });
+
+            const allPriorityLinks = document.querySelectorAll('.menuLeftShowUrgent, .menuLeftShowImportant, .menuLeftShowMedium, .menuLeftShowLow');
+            allPriorityLinks.forEach(item => {
+
+                item.style.textDecoration = "none";
+                item.style.fontWeight = "unset";
+
+            });
+
+            e.target.style.textDecoration = "underline";
+            e.target.style.fontWeight = "bold";
+
+
+            let selectedTasksName = e.target.innerText;
             $.post(showSelectedTasksUri, { id: selectedTasksName })
 
             .done(function (data) {
