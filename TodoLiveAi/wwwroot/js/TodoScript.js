@@ -437,10 +437,9 @@ $(function () {
 
         if (e.target.matches('.cardFooterLeftBtnsAiHelp')) {
 
-            let cardParent = $(e.target).parents()[3];
-            let cardContent = $(cardParent).find('.customCardContent > p')[0];
-            let loadingIcon = $(cardParent).find('.cardFooterLeftLoader')[0];
-            let message = cardContent.innerHTML;
+            let cardParent = e.target.closest('.customCard');
+            let message = cardParent.querySelector('.customCardContent > p').innerText;
+            let loadingIcon = cardParent.querySelector('.cardFooterLeftLoader');
             let cardId = e.target.getAttribute('cardId');
 
             loadingIcon.style.display = "inline-block";

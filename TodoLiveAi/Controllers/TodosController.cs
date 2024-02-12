@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OpenAI_API;
+using OpenAI_API.Chat;
 using OpenAI_API.Completions;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -313,7 +314,6 @@ namespace TodoLiveAi.Web.Controllers
 
 
 
-
         [HttpPost]
         [Route("GetAi")]
         public async Task<IActionResult> GetAi(string cardId, string message)
@@ -327,12 +327,10 @@ namespace TodoLiveAi.Web.Controllers
             }
 
             var vm = new MainVM();
-
             vm.TaskModel = _mapper.Map<TaskModel>(task);
 
             if (vm.TaskModel.Option1 != null)
             {
-
                 return PartialView("_AiResponse", vm);
             }
             else
@@ -345,26 +343,27 @@ namespace TodoLiveAi.Web.Controllers
                     APIkey = secretStoreApiKey;
                 }
 
+
+
                 string answer = string.Empty;
                 var openai = new OpenAIAPI(APIkey);
 
-                var completion = new CompletionRequest()
+                var completion = new OpenAI_API.Chat.ChatRequest()
                 {
-                    Prompt = message,
-                    //Model = OpenAI_API.Models.Model.DavinciText,
-                    //Model = OpenAI_API.Models.Model.AdaText,
-                    Model = OpenAI_API.Models.Model.DavinciText,
-                    MaxTokens = 200
+                    Model = OpenAI_API.Models.Model.ChatGPTTurbo,
+                    MaxTokens = 200,
+                    Messages = new ChatMessage[] {
+
+                        new ChatMessage(ChatMessageRole.System, "You are a helpful assistant designed to output JSON."),
+                        new ChatMessage(ChatMessageRole.User, message)
+                    }
                 };
 
-                var result = openai.Completions.CreateCompletionsAsync(completion);
-
-                if (result != null)
+                try
                 {
-                    foreach (var item in result.Result.Completions)
-                    {
-                        answer = item.Text;
-                    }
+                    var result = await openai.Chat.CreateChatCompletionAsync(completion);
+
+                    answer = result.ToString();
 
                     task.Option1 = answer;
                     vm.TaskModel.Option1 = answer;
@@ -373,15 +372,14 @@ namespace TodoLiveAi.Web.Controllers
 
                     return PartialView("_AiResponse", vm);
                 }
-                else
+                catch (Exception ex)
                 {
-                    return BadRequest("Not Found");
+                    string errorMsg = ex.Message;
+                    return StatusCode(500, "An error occurred while processing the request." + errorMsg);
                 }
             }
-
-
-
         }
+
 
 
 
