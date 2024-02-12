@@ -209,7 +209,7 @@ footer h2 {
     z-index: 1;
     position: absolute;
     top: 0;
-    animation: moveStarBackground 60s ease-in-out infinite alternate;
+    animation: moveStarBackground 60s linear infinite alternate;
 }
 
 @keyframes moveStarBackground {
@@ -232,7 +232,7 @@ footer h2 {
     z-index: 1;
     position: absolute;
     top: 0;
-    animation: moveStarBackground3 60s ease-in-out infinite alternate;
+    animation: moveStarBackground3 60s linear infinite alternate;
 }
 
 @keyframes moveStarBackground3 {

@@ -26,6 +26,7 @@ const generateIcons = () => {
     });
 
 };
+
 generateIcons();
 
 setInterval(generateIcons, 20000);
