@@ -1,0 +1,36 @@
+﻿@model TodoLiveAi.Web.Models.MainVM
+
+
+<div class="aiResponseModalBox modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content p-2 aiResponseModal">
+
+            <div class="aiResponseModalHeader modal-header">
+                <h1>Ai Midn Says:</h1>
+            </div>
+
+            <div class="aiResponseModalBody modal-content p-2">
+
+                <div class="aiResponseModalBodyContent">
+
+                    <p class="aiResponseModalResponseText">
+                        @Model?.TaskModel?.Option1
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="aiResponseModalFooter modal-footer">
+
+                <button class="btn btn-success" data-bs-dismiss="modal" aria-label="Close">Close</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
